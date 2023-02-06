@@ -26,3 +26,23 @@ At this point, you should have a running Ubuntu container with a working instanc
 docker ps
 ```
 
+## Interfacing with MQTT-Docker
+There are several ways to interact with the running instance of MQTT-Docker. Here's a few examples to validate that everything is working as intended.
+
+To validate outgoing messaging, set up a `mosquitto_sub` on your workstation to listen on the appropriate port we have designated:
+```bash
+mosquitto_sub -t 'test/topic' -p 31883 -v
+```
+
+Then, in another terminal, run the following command:
+```bash
+docker exec -it <CONTAINER_ID> /bin/bash -c 'mosquitto_pub -t "test/topic" -m "Hello from inside the container" -p 31883'
+```
+
+You should see the published message show up on the subscriber terminal. To test incoming messaging, flip this experiment, making the `mosquitto_sub` run from within the container and publish from your workstation.
+
+For additional inspection and debugging, you can remote into the docker container using the following command:
+```bash
+docker exec -it <CONTAINER_ID> /bin/bash
+```
+
